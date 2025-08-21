@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colour Guesser - Test Your Color Vision</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎨 Colour Guesser</h1>
+            <div class="mode-toggle-container">
+                <div class="mode-toggle">
+                    <input type="checkbox" id="mode-switch" class="mode-switch">
+                    <label for="mode-switch" class="mode-label">
+                        <span class="mode-text" id="mode-text">Guess Hex Code</span>
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Score:</span>
+                        <span id="current-score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Streak:</span>
+                        <span id="streak" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Best:</span>
+                        <span id="high-score" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="new-game" class="new-game-btn">New Game</button>
+            </div>
+        </header>
+
+        <main class="game-area">
+            <!-- Color Display Mode (Guess Hex) -->
+            <div id="color-display-mode" class="color-display">
+                <div id="target-color" class="target-color"></div>
+                <p class="color-instruction">Guess the hex code for this color!</p>
+            </div>
+
+            <!-- Hex Display Mode (Guess Color) -->
+            <div id="hex-display-mode" class="hex-display hidden">
+                <div id="target-hex" class="target-hex">#FF5733</div>
+                <p class="color-instruction">Pick the color that matches this hex code!</p>
+            </div>
+
+            <div class="input-section">
+                <!-- Hex Input (for Color Display Mode) -->
+                <div id="hex-input-container" class="hex-input-container">
+                    <label for="hex-input" class="input-label">Your Guess:</label>
+                    <input 
+                        type="text" 
+                        id="hex-input" 
+                        class="hex-input" 
+                        placeholder="#FF5733" 
+                        maxlength="7"
+                        autocomplete="off"
+                    >
+                    <div id="guess-preview" class="guess-preview"></div>
+                </div>
+
+                <!-- Color Picker Input (for Hex Display Mode) -->
+                <div id="color-picker-container" class="color-picker-container hidden">
+                    <label class="input-label">Your Guess:</label>
+                    <div class="custom-color-picker">
+                        <div class="color-area" id="color-area">
+                            <div class="color-selector" id="color-selector"></div>
+                        </div>
+                        <div class="hue-slider-container">
+                            <div class="hue-slider" id="hue-slider">
+                                <div class="hue-handle" id="hue-handle"></div>
+                            </div>
+                        </div>
+                        <div class="selected-color" id="selected-color"></div>
+                    </div>
+                </div>
+
+                <button id="submit-guess" class="submit-btn">Submit Guess</button>
+            </div>
+
+            <!-- Modal for new game confirmation -->
+            <div id="new-game-modal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Start New Game?</h3>
+                        <button id="new-game-modal-close" class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="confirmation-message">
+                            <p>Are you sure you want to start a new game?</p>
+                            <p class="warning-text">This will reset your current score and streak.</p>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="confirm-new-game" class="confirm-btn">Yes, Start New Game</button>
+                            <button id="cancel-new-game" class="cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for feedback -->
+            <div id="feedback-modal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Round Results</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="color-comparison">
+                            <div class="comparison-item">
+                                <div id="actual-color" class="comparison-color"></div>
+                                <p class="comparison-label">Actual Color</p>
+                                <p id="actual-hex" class="hex-code"></p>
+                            </div>
+                            <div class="comparison-item">
+                                <div id="guessed-color" class="comparison-color"></div>
+                                <p class="comparison-label">Your Guess</p>
+                                <p id="guessed-hex" class="hex-code"></p>
+                            </div>
+                        </div>
+                        <div class="score-feedback">
+                            <div id="round-score" class="round-score"></div>
+                            <div id="accuracy-message" class="accuracy-message"></div>
+                        </div>
+                        <div class="next-btn-container">
+                            <button id="next-round" class="next-btn">Next Color</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="game-stats">
+                <h3>Game Statistics</h3>
+                <div class="stat-item">
+                    <span>Games Played:</span>
+                    <span id="games-played">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Average Score:</span>
+                    <span id="average-score">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Perfect Guesses:</span>
+                    <span id="perfect-guesses">0</span>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h3>How to Play</h3>
+                <div id="game-rules">
+                    <!-- Rules will be dynamically updated based on game mode -->
+                </div>
+                
+                <div class="streak-info">
+                    <h4>Streak System</h4>
+                    <ul>
+                        <li><strong>Build:</strong> Score ≥70 points to maintain streak</li>
+                        <li><strong>Bonus:</strong> +5 points per streak level (max +50)</li>
+                        <li><strong>Reset:</strong> Score <70 resets streak to 0</li>
+                        <li><strong>Perfect:</strong> Score 100 = +50 bonus points</li>
+                    </ul>
+                </div>
+                
+                <div class="game-controls">
+                    <!-- New Game button moved to header -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="scripts/colorUtils.js"></script>
+    <script src="scripts/scoring.js"></script>
+    <script src="scripts/colorPicker.js"></script>
+    <script src="scripts/game.js"></script>
+</body>
+</html>
